@@ -1,0 +1,24 @@
+{
+  "name": "ntq",
+  "version": "1.0.0",
+  "description": "A Task Queue based on Napajs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archanpatkar/NTQ.git"
+  },
+  "author": "Archan Patkar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/archanpatkar/NTQ/issues"
+  },
+  "homepage": "https://github.com/archanpatkar/NTQ#readme",
+  "dependencies": {
+    "napajs": "^0.2.3",
+    "uuid": "^3.2.1"
+  }
+}
