@@ -1,13 +1,16 @@
-const { go } = require("./index")();
+const { go } = require("./index")(16);
 
 console.log("Before");
-go( (x,y) => {
+
+function f1(x,y) {
   console.log(`x = ${x}`);
   console.log(`y = ${y}`);
   return x + y;
-},10,20
-)
-.then(
-  (result) => console.log(result.value)
-);
+}
+
+for(let i = 0;i < 1000;i++)
+{
+  go(f1,i*10,i*10).then(result => console.log(result.value));
+}
+
 console.log("After");
