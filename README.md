@@ -1,9 +1,10 @@
 # Goj
 ### Goroutines in Javascript
 
-Go.js is a small wrapper around Napa.js to give Go Style Concurrency in Javascript
+Goj is a small wrapper around Napa.js to give Go Style Concurrency in Javascript
 
-### To install `npm install goj`
+## Installation
+`npm install goj`
 
 ## Example
 ```javascript
