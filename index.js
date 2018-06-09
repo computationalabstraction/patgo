@@ -1,8 +1,9 @@
 const napa = require('napajs');
+const uuidv4 = require('uuid/v4');
 
-module.exports = (size = 8) => 
+module.exports = (size = 8) =>
 {
-  const tpool = napa.zone.create( "JSCOR_THREAD_POOL" , { workers: size });
+  const tpool = napa.zone.create( `GO_THREAD_POOL: ${uuidv4()}` , { workers: size });
 
   function go(task)
   {
