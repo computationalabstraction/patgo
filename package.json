@@ -1,5 +1,5 @@
 {
-  "name": "ntq",
+  "name": "goj",
   "version": "1.0.0",
   "description": "A Task Queue based on Napajs",
   "main": "index.js",
