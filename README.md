@@ -3,7 +3,7 @@
 
 Go.js is a small wrapper around Napa.js to give Go Style Concurrency in Javascript
 
-To install `npm install goj`
+### To install `npm install goj`
 
 ## Example
 ```javascript
