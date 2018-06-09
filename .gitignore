@@ -57,5 +57,7 @@ typings/
 # dotenv environment variables file
 .env
 
+Backyard.js
+
 # next.js build output
 .next
