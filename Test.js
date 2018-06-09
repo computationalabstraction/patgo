@@ -1,8 +1,13 @@
 const { go } = require("./index")();
 
-/* TODO: Adding Channels from GO */
-
-
 console.log("Before");
-go( () => console.log("Hello from JRoutines") ).then(() => console.log("Execution Complete"))
+go( (x,y) => {
+  console.log(`x = ${x}`);
+  console.log(`y = ${y}`);
+  return x + y;
+},10,20
+)
+.then(
+  (result) => console.log(result.value)
+);
 console.log("After");
