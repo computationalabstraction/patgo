@@ -4,7 +4,7 @@
 Goj is a small wrapper around Napa.js to give Go Style Concurrency in Javascript
 
 ## Installation
-`npm install goj`
+### `npm install goj`
 
 ## Example
 ```javascript
