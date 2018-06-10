@@ -23,9 +23,9 @@ const uuidv4 = require('uuid/v4');
 module.exports = (size = 8) =>
 {
   const tpool = napa.zone.create( `GO_THREAD_POOL: ${uuidv4()}` , { workers: size });
-  const store = napa.store.create('GO_STORE');
-  const mapping = {};
-  let counter = 0;
+  // const store = napa.store.create('GO_STORE');
+  // const mapping = {};
+  // let counter = 0;
 
   // Global Code Provided by the library to every Goroutine
   // function getChannel(id)
