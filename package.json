@@ -1,7 +1,7 @@
 {
   "name": "goj",
   "version": "1.0.0",
-  "description": "A Task Queue based on Napajs",
+  "description": "Goroutines in Javascript",
   "main": "index.js",
   "scripts": {
     "start": "node .",
