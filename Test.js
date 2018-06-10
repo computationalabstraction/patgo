@@ -10,7 +10,8 @@ function f1(obj) {
 }
 
 // Closures dont work! with Napa.js
-go(f1, { x: 10, y:10 , c: new EventEmitter() }).then(result => console.log(result.value));
+// Complex Composite Types dont work with Napa.js
+go(f1, { x: 10, y:10 }).then(result => console.log(result.value));
 
 // for(let i = 0;i < 1000;i++)
 // {
