@@ -1,6 +1,7 @@
 const napa = require('napajs');
 const uuidv4 = require('uuid/v4');
 const EventEmitter = require('events');
+// const providers = [ "napajs" ,  "webworker-threads"];
 
 class Channel
 {
