@@ -12,7 +12,8 @@ Currently the function executed will be isolated and closure will not be acessib
 It is recommended that you only do CPU Intensive tasks in the function(Goroutine)
 
 ## Installation
-### `npm install goj`
+### `> npm i goj` or
+### `> npm install goj`
 
 ## Examples
 ### 1. Simple
