@@ -15,7 +15,7 @@ It is recommended that you only do CPU Intensive tasks in the function(Goroutine
 ### `npm install goj`
 
 ## Examples
-### Simple
+### 1. Simple
 ```javascript
 const { go } = require("goj")();
 
@@ -26,7 +26,7 @@ go( () => console.log("Executed Concurrently") ).then( () => console.log("Execut
 console.log("After");
 ``` 
 
-### Function Execution with Params
+### 2. Function Execution with Params
 ```javascript
 const { go } = require("goj")();
 
@@ -46,7 +46,7 @@ for(let i = 0;i < 1000;i++)
 console.log("After");
 ```
 
-### Custom Thread Pool Size
+### 3. Custom Thread Pool Size
 ```javascript
 const { go } = require("goj")(32);
 
