@@ -1,24 +1,24 @@
 const napa = require('napajs');
 const uuidv4 = require('uuid/v4');
-// const EventEmitter = require('events');
+const EventEmitter = require('events');
 
-// class Channel
-// {
-//   constructor()
-//   {
-//     this.emitter = new EventEmitter();
-//   }
-//
-//   send(...data)
-//   {
-//     this.emitter.emit("data",...data);
-//   }
-//
-//   receive(handler)
-//   {
-//     this.emitter.on("data",handler);
-//   }
-// }
+class Channel
+{
+  constructor()
+  {
+    this.emitter = new EventEmitter();
+  }
+
+  send(...data)
+  {
+    this.emitter.emit("data",...data);
+  }
+
+  receive(handler)
+  {
+    this.emitter.on("data",handler);
+  }
+}
 
 module.exports = (size = 8) =>
 {
@@ -65,6 +65,7 @@ module.exports = (size = 8) =>
 
   return {
     go:go,
-    getPoolSize:getPoolSize
+    getPoolSize:getPoolSize,
+    Channel:Channel
   }
 };
