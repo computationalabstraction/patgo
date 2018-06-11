@@ -9,7 +9,7 @@ Goj internally uses a Thread Pool (Zone - Napajs) by default it is 8 Threads (Wo
 `go( () => ... )` returns a Promise by default if the execution of the function(Goroutine) successful then Success Handler will be called and if your function returns some value you will get it as a Parameter in Success Handler.
 
 Currently the function when executed will be isolated and closure will not be acessible.
-It is recommended that you only do CPU Intensive tasks in the function(Goroutine)
+It is recommended that you only do CPU Intensive tasks in the function(Goroutine).
 
 ## Installation
 ### `npm i goj` or `npm install goj`
