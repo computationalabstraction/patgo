@@ -40,7 +40,8 @@ function f1(x,y) {
 
 for(let i = 0;i < 1000;i++)
 {
-  go(f1,i*10,i*10).then(result => console.log(result.value));
+  go(f1,i*10,i*10) // You can pass any number of params after the function and will passed to the function when executed
+  .then(result => console.log(result.value));
 }
 
 console.log("After");
