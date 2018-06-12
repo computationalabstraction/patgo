@@ -40,7 +40,7 @@ module.exports = (size = 8) =>
 
   function addLib(code_string)
   {
-    tpool.broadcast(code_string);
+    tpool.broadcast(a);
   }
 
   return {
