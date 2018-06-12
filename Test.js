@@ -1,21 +1,7 @@
-const { go , Channel } = require("./index")(16);
-const EventEmitter = require('events');
+const { go } = require("goj")();
 
 console.log("Before");
 
-function f1(obj) {
-  console.log(`x = ${obj.x}`);
-  console.log(`y = ${obj.y}`);
-  return obj.x + obj.y;
-}
-
-// Closures dont work! with Napa.js
-// Complex Composite Types dont work with Napa.js
-go(f1, { x: 10, y:10 }).then(result => console.log(result.value));
-
-// for(let i = 0;i < 1000;i++)
-// {
-//   go(f1,i*10,i*10).then(result => console.log(result.value));
-// }
+go( () => console.log("Executed Concurrently") ).then( () => console.log("Execution Complete") );
 
 console.log("After");
