@@ -1,4 +1,4 @@
-# Goj
+# patGo
 ### Goroutines in Javascript
 
 Goj is a small wrapper around Napa.js to give Go Style Concurrency in Javascript.
