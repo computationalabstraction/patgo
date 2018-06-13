@@ -1,5 +1,5 @@
 {
-  "name": "goj",
+  "name": "patgo",
   "version": "1.0.0",
   "description": "Goroutines in Javascript",
   "main": "index.js",
