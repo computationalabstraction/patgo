@@ -11,7 +11,7 @@ Goj internally uses a Thread Pool (Zone - Napajs) by default it is 8 Threads (Wo
 Currently the function when executed will be isolated and closure will not be acessible.
 It is recommended that you only do CPU Intensive tasks in the function(Goroutine).
 
-This project has limited capabilites as Napa.js is also currently in Development Phase but will be constantly updated.
+This project has limited capabilites as Napa.js is also currently in Development Phase but will be constantly updated as Napa.js Advances.
 
 ## Installation
 ### `npm i goj` or `npm install goj`
