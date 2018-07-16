@@ -1,7 +1,7 @@
 # patGo
 ### Goroutines in Javascript
 
-Goj is a small wrapper around Napa.js to give Go Style Concurrency in Javascript.
+patGo is a small wrapper around Napa.js to give Go Style Concurrency in Javascript.
 This library/wrapper enables Developer to seamlessly do Concurrent Programming on Node.js,
 it as simple as `go( () => ... )` and it will assign a Thread (Worker - Napajs) to execute the function.
 
@@ -11,15 +11,14 @@ Goj internally uses a Thread Pool (Zone - Napajs) by default it is 8 Threads (Wo
 Currently the function when executed will be isolated and closure will not be acessible.
 It is recommended that you only do CPU Intensive tasks in the function(Goroutine).
 
-This project has limited capabilites as Napa.js is also currently in Development Phase but will be constantly updated as Napa.js Advances.
 
 ## Installation
-### `npm i goj` or `npm install goj`
+### `npm i patgo` or `npm install patgo`
 
 ## Examples
 ### 1. Simple
 ```javascript
-const { go } = require("goj")();
+const { go } = require("patgo")();
 
 console.log("Before");
 
@@ -30,7 +29,7 @@ console.log("After");
 
 ### 2. Function Execution with Params
 ```javascript
-const { go } = require("goj")();
+const { go } = require("patgo")();
 
 console.log("Before");
 
@@ -42,7 +41,7 @@ function f1(x,y) {
 
 for(let i = 0;i < 1000;i++)
 {
-  // You can pass any number of params after the function and will passed to the function when executed
+  // You can pass any number of params after the function and will be passed to the function when executed
   go(f1,i*10,i*10).then(result => console.log(result.value));
 }
 
@@ -51,7 +50,7 @@ console.log("After");
 
 ### 3. Custom Thread Pool Size
 ```javascript
-const { go } = require("goj")(32);
+const { go } = require("patgo")(32);
 
 console.log("Before");
 
