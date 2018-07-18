@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/archanpatkar/NTQ.git"
+    "url": "git+https://github.com/archanpatkar/patgo.git"
   },
   "author": "Archan Patkar",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/archanpatkar/NTQ/issues"
+    "url": "https://github.com/archanpatkar/patgo/issues"
   },
-  "homepage": "https://github.com/archanpatkar/NTQ#readme",
+  "homepage": "https://github.com/archanpatkar/patgo#readme",
   "dependencies": {
     "napajs": "^0.2.3",
     "uuid": "^3.2.1"
