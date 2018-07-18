@@ -1,4 +1,4 @@
-const { go } = require("goj")();
+const { go } = require("./index")();
 
 console.log("Before");
 
