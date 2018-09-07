@@ -1,6 +1,5 @@
 # patGo
 ### Goroutines in Javascript
-> Prerequisite Node.js < v8.5.0
 
 patgo is a wrapper around Napa.js to give Go Style Concurrency in Javascript.
 This library/wrapper enables Developer to seamlessly do Concurrent Programming on Node.js,
