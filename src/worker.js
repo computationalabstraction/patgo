@@ -7,9 +7,9 @@ parentPort.on("message", async packet => {
     {
         data = await routine(packet.channel);
     }
-    catch(e)
+    catch(err)
     {
-        data = e;
+        data = err;
     }
     parentPort.postMessage(data);
 });
