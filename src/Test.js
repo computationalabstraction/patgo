@@ -1,8 +1,10 @@
-const { gop , stop , registry } = require(".")();
+const { go , goR , stop , registry } = require(".")();
 
 console.log("Before");
 
-let gr = gop(
+go((x,y) => x + y,[10,20]).then((v) => console.log(v));
+
+let gr = goR(
     (c) => {
         c.on('message', message => {
             console.log(message);
