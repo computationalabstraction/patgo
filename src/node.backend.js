@@ -14,7 +14,7 @@ class GoRoutine
         this.channel = new MessageChannel();
     }
 
-    start(params)
+    run(params)
     {
         let gen_code = code(this.routine,params);
         let p = new Promise((resolve, reject) => {
@@ -69,13 +69,13 @@ module.exports = () => {
         if(routine instanceof GoRoutine) 
         {
             list.push(routine);
-            return routine.start(params)
+            return routine.run(params)
         }
         else 
         {
             const gr = wrap(routine,context,decide);
             list.push(gr);
-            return gr.start(params);
+            return gr.run(params);
         }
     }
 
@@ -84,7 +84,7 @@ module.exports = () => {
         return cgo(routine,params,context,true);
     }
 
-    function gop(routine , params = [] , context = {})
+    function goR(routine , params = [] , context = {})
     {
         return cgo(routine,params,context,false);
     }
@@ -96,7 +96,7 @@ module.exports = () => {
 
     return {
         go,
-        gop,
+        goR,
         wrap,
         stop,
         list,
