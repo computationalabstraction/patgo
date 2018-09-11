@@ -21,16 +21,15 @@ class GoRoutine
             let packet = { code:gen_code , channel:this.channel.port2 }
             this.worker.postMessage(packet,[this.channel.port2]);
             this.worker.on('message', 
-                (v) => {
-                    resolve(v);
-                    if(this.once) {
-                        this.stop();
+                (output) => {
+                    if(output instanceof Error)
+                    {
+                        reject(output);
                     }
-                }
-            );
-            this.worker.on('error', 
-                (v) => {
-                    reject(v);
+                    else
+                    {
+                        resolve(output);
+                    }
                     if(this.once) {
                         this.stop();
                     }
