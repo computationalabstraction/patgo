@@ -2,6 +2,33 @@ const { Worker , MessageChannel } = require('worker_threads');
 
 const worker_code = "./worker.js";
 
+
+function send(data)
+{
+    return new Promise( (resolve,reject) => {
+        try {
+            this.postMessage(data);   
+            resolve(true);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+function receive()
+{
+    return new Promise( (resolve,reject) => {
+        try {
+            this.on('message', data => {
+                resolve(data);
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+
 class GoRoutine
 {
     constructor(routine,context,once = true)
@@ -12,6 +39,8 @@ class GoRoutine
             workerData: JSON.stringify(context)
         });
         this.channel = new MessageChannel();
+        this.channel.port1.send = send;
+        this.channel.port1.receive = receive;
     }
 
     run(params)
@@ -38,7 +67,7 @@ class GoRoutine
         });
         p.channel = this.channel.port1;
         p.routine = this;
-        return p;
+        return { p:p , channel:this.channel.port1 , routine:this };
     }
 
     stop()
@@ -84,7 +113,7 @@ module.exports = () => {
         return cgo(routine,params,context,true);
     }
 
-    function goR(routine , params = [] , context = {})
+    function gostay(routine , params = [] , context = {})
     {
         return cgo(routine,params,context,false);
     }
@@ -96,7 +125,7 @@ module.exports = () => {
 
     return {
         go,
-        goR,
+        gostay,
         wrap,
         stop,
         list,
