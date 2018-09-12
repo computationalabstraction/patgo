@@ -1,26 +1,28 @@
-const { go , goR , stop , registry } = require(".")();
+const { go , gostay , stop } = require(".")();
 
 console.log("Before");
 
-go((x,y) => x + y,[10,20]).then((v) => console.log(v));
+(async _ => {
+    let v = await go((x,y) => x + y,[10,20]).p;
+    console.log(v);
+})();
 
-let gr = goR(
-    (c) => {
-        c.on('message', message => {
-            console.log(message);
-            c.postMessage("Pong");
-        });
-        return true;
-    }
-);
+(async _ => {
 
-gr.then((e) => console.log("Done",e));
+    let frame = go(
+        async (c) => {
+            let msg = await c.receive();
+            console.log(msg);
+            c.send("Pong");
+        }
+    );
 
-gr.channel.on("message", message => {
-    console.log(message);
-    gr.routine.stop();
-});
+    frame.channel.send("Ping");
 
-gr.channel.postMessage("Ping");
+    let msg = await frame.channel.receive();
+    
+    console.log(msg);
+})();
 
+// frame.p.then((e) => console.log("Done"));
 console.log("After");
