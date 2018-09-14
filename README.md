@@ -1,4 +1,4 @@
-# patGo
+### <img src="./patgo.png" />
 ### Goroutines in Javascript
 
 patgo is a library which provides Go Style Concurrency in Javascript with swappable Node.js(Workers)/Napa.js backends.
