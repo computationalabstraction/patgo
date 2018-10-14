@@ -1,9 +1,9 @@
 ### <img src="./patgo.png" />
 ### Goroutines in Javascript
 
-patgo is a library which provides Go Style Concurrency in Javascript with swappable Node.js(Workers)/Napa.js backends.
+patgo is a library which provides Go Style Concurrency in Javascript using Node.js Workers
 This library enables Developer to seamlessly do Concurrent Programming on Node.js,
-it as simple as `go( () => ... )` and it will assign a Thread (Worker) to execute the function.
+it as simple as `go( () => ... )` and it will assign a Thread to execute the function. In addition patGo provides the abstraction `Async Channels` which are implemented using Message Port.
 
 `go( () => ... )` returns a Promise by default if the execution of the function(Goroutine) successful then Success Handler will be called and if your function returns some value you will get it as a Parameter in Success Handler.
 
