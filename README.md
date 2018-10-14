@@ -22,6 +22,7 @@ it as simple as `go( () => ... )` and it will assign a Thread to execute the fun
     let msg = await channel.receive();
     
     console.log(msg);
+    
 })();
 ```
 
