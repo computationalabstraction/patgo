@@ -3,9 +3,7 @@
 
 patgo is a library which provides **Go Style Concurrency** in Javascript using Node.js Workers.
 This library enables Developer to seamlessly do **Concurrent Programming** on Node.js,
-it as simple as `go( () => ... )` and it will assign a Thread to execute the function. In addition to this patgo also provides the abstraction **Async Channels** from Go which are internally implemented using Message Port API on Node.js.
-
-For setup just install the package and you are done.
+it as simple as `go( () => ... )` and it will assign a Thread to execute the function. In addition to this patgo also provides the abstraction **Async Channels** from Go which are internally implemented using Message Port API on Node.js. For setup just install the package and you are done.
 ### `npm i patgo`
 
 ## Hello World Example
