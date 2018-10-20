@@ -6,7 +6,7 @@ This library enables Developer to seamlessly do **Concurrent Programming** on No
 it as simple as `go( () => ... )` and it will assign a Thread to execute the function. In addition to this patgo also provides the abstraction **Async Channels** from Go which are internally implemented using Message Port API on Node.js.
 
 ## Installation
-`npm i patgo`
+### `npm i patgo`
 
 ## Hello World Example
 ```javascript
