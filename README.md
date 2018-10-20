@@ -10,6 +10,7 @@ For setup just install the package and you are done.
 
 ## Hello World Example
 ```javascript
+const { go } = require("patgo");
 (async _ => {
 
     let { channel } = go(
