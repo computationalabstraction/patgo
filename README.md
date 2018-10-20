@@ -1,9 +1,9 @@
 ### <img src="./patgo.png" />
 ### Goroutines in Javascript
 
-patgo is a library which provides **Go Style Concurrency** in Javascript using Node.js Workers
+patgo is a library which provides **Go Style Concurrency** in Javascript using Node.js Workers.
 This library enables Developer to seamlessly do **Concurrent Programming** on Node.js,
-it as simple as `go( () => ... )` and it will assign a Thread to execute the function. In addition to this patgo also provides the abstraction **Async Channels** from Go which are internally implemented using Message Port API.
+it as simple as `go( () => ... )` and it will assign a Thread to execute the function. In addition to this patgo also provides the abstraction **Async Channels** from Go which are internally implemented using Message Port API on Node.js.
 
 ## Hello World Example
 ```javascript
