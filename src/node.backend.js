@@ -28,6 +28,30 @@ function receive()
     });
 }
 
+let FREE = 0;
+let AQUIRED = 1;
+let WAIT = 2;
+
+class Pool
+{
+    constructor(initial_capacity)
+    {
+        this.q = [];
+        this.number = initial_capacity;
+        this.wokers = [];
+        for(let i = 0;i < this.number; i++)
+        {
+            let context = 
+            {
+                worker: new Worker(worker_code, {
+                    workerData: JSON.stringify(context)
+                }),
+                status: FREE
+            }
+            workers.push(context );
+        }
+    }
+}
 
 class GoRoutine
 {
