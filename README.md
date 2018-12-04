@@ -7,6 +7,7 @@ it as simple as `go( () => ... )` and it will assign a Thread to execute the fun
 ### `npm i patgo`
 
 ## Hello World Example
+> Requires Node 10 and --experimental-worker flag while execution
 ```javascript
 const { go } = require("patgo");
 
