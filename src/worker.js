@@ -16,9 +16,7 @@ function receive()
 {
     return new Promise( (resolve,reject) => {
         try {
-            this.on('message', data => {
-                resolve(data);
-            });
+            this.on('message', data => resolve(data));
         } catch (error) {
             reject(error);
         }
