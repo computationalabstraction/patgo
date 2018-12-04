@@ -28,27 +28,53 @@ function receive()
     });
 }
 
-let FREE = 0;
-let AQUIRED = 1;
-let WAIT = 2;
+const FREE = Symbol("FREE");
+const RUNNING = Symbol("RUNNING");
+const WAIT = Symbol("WAIT");
+const CORES = require('os').cpus().length;
 
 class Pool
 {
     constructor(initial_capacity)
     {
         this.q = [];
-        this.number = initial_capacity;
+        if(initial_capacity) this.nw = initial_capacity;
+        else this.nw = CORES;
         this.wokers = [];
-        for(let i = 0;i < this.number; i++)
+        for(let i = 0; i < this.nw; i++)
         {
-            let context = 
+            this.addWorker();
+        }
+    }
+
+    addWorker()
+    {
+        let thunk = 
+        {
+            worker: new Worker(worker_code, {
+                workerData: JSON.stringify(context)
+            }),
+            state: FREE
+        }
+        workers.push(thunk);
+    }
+
+    surrender(worker)
+    {
+        worker.state = FREE;
+    }
+
+    *get()
+    {
+        while(true)
+        {
+            let w = this.workers.filter(t => t.state == FREE);
+            if(w) yield w;
+            else 
             {
-                worker: new Worker(worker_code, {
-                    workerData: JSON.stringify(context)
-                }),
-                status: FREE
+                this.addWorker();
+                yield this.wokers[this.wokers.length-1];
             }
-            workers.push(context );
         }
     }
 }
@@ -83,7 +109,8 @@ class GoRoutine
                     {
                         resolve(output);
                     }
-                    if(this.once) {
+                    if(this.once) 
+                    {
                         this.stop();
                     }
                 }
