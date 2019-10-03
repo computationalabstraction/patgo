@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx jest"
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,10 @@
     "url": "https://github.com/archanpatkar/patgo/issues"
   },
   "homepage": "https://github.com/archanpatkar/patgo#readme",
+  "devDependencies": {
+    "jest": "^24.9.0"
+  },
   "dependencies": {
-    "uuid": "^3.2.1"
+    "conciseee": "^1.0.9"
   }
 }
