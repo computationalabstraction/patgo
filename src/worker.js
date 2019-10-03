@@ -25,6 +25,9 @@ function receive()
 
 let context = JSON.parse(workerData);
 parentPort.on("message", async packet => {
+    if(packet.context) {
+        context = packet.context;
+    }
     eval(packet.code);
     let data;
     try
