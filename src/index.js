@@ -70,8 +70,10 @@ class Pool {
     }
 
     shutdown(gracefully = true) {
-        console.log("called1");
+        console.log("Pool Shutdown");
         for (let worker of this.workers) {
+            console.log("PoolWorker Thread ID");
+            console.log(worker.worker.threadId);
             if(gracefully) worker.worker.unref();
             else worker.worker.terminate();
         }
@@ -158,13 +160,15 @@ class GoRoutine {
     }
 
     stop(gracefully = true) {
-        console.log("called2");
+        console.log("GoRoutine Shutdown");
         if (this.once) {
             this.channel.port1.unref();
             this.channel.port2.unref();
             this.pool.surrender(this.worker);
         }
         else {
+            console.log("Stay Thread ID");
+            console.log(this.worker.threadId);
             if(gracefully) this.worker.unref();
             else this.worker.terminate();
         }
@@ -197,8 +201,10 @@ module.exports = (size = CORES) => {
     }
 
     function shutdown(gracefully = true) {
-        console.log("Called3");
+        console.log("Global Shutdown");
         default_pool.shutdown(gracefully);
+        console.log("Stayers");
+        console.log(stayers);
         stayers.forEach(r => r.stop(gracefully));
     }
 
