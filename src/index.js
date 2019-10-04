@@ -70,6 +70,7 @@ class Pool {
     }
 
     shutdown(gracefully = true) {
+        console.log("called1");
         for (let worker of this.workers) {
             if(gracefully) worker.worker.unref();
             else worker.worker.terminate();
@@ -109,7 +110,7 @@ class GoRoutine {
                 this.worker.worker.postMessage(packet, [this.channel.port2]);
                 this.worker.worker.on('message',
                     (output) => {
-                        if (output.error) {
+                        if (typeof(output) == "object" && output.error) {
                             reject(output);
                         }
                         else {
@@ -124,17 +125,21 @@ class GoRoutine {
         }
         else 
         {
-            // Create a promise
-            // Create a channel inside the promise
+            let channel = new MessageChannel();
+            channel.port1.unref();
+            channel.port2.unref();
+            channel.port1.send = send;
+            channel.port1.receive = receive;
+            let packet = {
+                code: code(this.routine, params),
+                channel: channel.port2,
+            };
             let eventualPromise = () => {
-                let channel = new MessageChannel();
-                channel.port1.send = send;
-                channel.port1.receive = receive;
-                let p = new Promise((resolve, reject) => {
-                    this.worker.worker.postMessage(packet, [channel.port2]);
-                    this.worker.worker.on('message',
+                return new Promise((resolve, reject) => {
+                    this.worker.postMessage(packet, [channel.port2]);
+                    this.worker.on('message',
                         (output) => {
-                            if (output.error) {
+                            if (typeof(output) == "object" && output.error) {
                                 reject(output);
                             }
                             else {
@@ -143,21 +148,20 @@ class GoRoutine {
                         }
                     );
                 });
-                p.channel = channel.port1;
-                return p;
             } 
-
             if(this.prev) this.prev = this.prev.then(eventualPromise);
             else this.prev = eventualPromise();
-            return 
+            this.prev.channel = channel.port1;
+            return this.prev;
         }
 
     }
 
     stop(gracefully = true) {
-        this.channel.port1.unref();
-        this.channel.port2.unref();
+        console.log("called2");
         if (this.once) {
+            this.channel.port1.unref();
+            this.channel.port2.unref();
             this.pool.surrender(this.worker);
         }
         else {
@@ -193,6 +197,7 @@ module.exports = (size = CORES) => {
     }
 
     function shutdown(gracefully = true) {
+        console.log("Called3");
         default_pool.shutdown(gracefully);
         stayers.forEach(r => r.stop(gracefully));
     }
