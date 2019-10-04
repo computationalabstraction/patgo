@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/archanpatkar/patgo/issues"
   },
-  "homepage": "https://github.com/archanpatkar/patgo#readme",
+  "homepage": "https://patgo.archan.io",
   "devDependencies": {
     "jest": "^24.9.0"
   },
