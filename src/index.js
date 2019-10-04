@@ -69,9 +69,10 @@ class Pool {
         }
     }
 
-    shutdown() {
+    shutdown(gracefully = true) {
         for (let worker of this.workers) {
-            worker.worker.unref();
+            if(gracefully) worker.worker.unref();
+            else worker.worker.terminate();
         }
     }
 }
@@ -84,56 +85,84 @@ class GoRoutine {
             this.pool = pool;
             this.context = context;
             this.worker = pool.acquire();
+            this.channel = new MessageChannel();
+            this.channel.port1.send = send;
+            this.channel.port1.receive = receive;
         }
         else {
             this.worker = new Worker(worker_code, {
                 workerData: JSON.stringify(context)
             });
+            this.prev = null;
         }
-        this.channel = new MessageChannel();
-        this.channel.port1.send = send;
-        this.channel.port1.receive = receive;
     }
 
     run(params) {
-        let worker;
-        let packet = {
-            code: code(this.routine, params),
-            channel: this.channel.port2
-        };
-        if (this.once) {
-            worker = this.worker.worker;
-            packet.context = JSON.stringify(this.context);
-        }
-        else worker = this.worker;
-        let p = new Promise((resolve, reject) => {
-            worker.postMessage(packet, [this.channel.port2]);
-            worker.on('message',
-                (output) => {
-                    if (output instanceof Error) {
-                        reject(output);
-                    }
-                    else {
-                        resolve(output);
-                    }
-                    if (this.once) {
+        if(this.once) 
+        {
+            let packet = {
+                code: code(this.routine, params),
+                channel: this.channel.port2,
+                context: JSON.stringify(this.context)
+            };
+            let p = new Promise((resolve, reject) => {
+                this.worker.worker.postMessage(packet, [this.channel.port2]);
+                this.worker.worker.on('message',
+                    (output) => {
+                        if (output.error) {
+                            reject(output);
+                        }
+                        else {
+                            resolve(output);
+                        }
                         this.stop();
                     }
-                }
-            );
-        });
-        p.channel = this.channel.port1;
-        return p;
+                );
+            });
+            p.channel = this.channel.port1;
+            return p;
+        }
+        else 
+        {
+            // Create a promise
+            // Create a channel inside the promise
+            let eventualPromise = () => {
+                let channel = new MessageChannel();
+                channel.port1.send = send;
+                channel.port1.receive = receive;
+                let p = new Promise((resolve, reject) => {
+                    this.worker.worker.postMessage(packet, [channel.port2]);
+                    this.worker.worker.on('message',
+                        (output) => {
+                            if (output.error) {
+                                reject(output);
+                            }
+                            else {
+                                resolve(output);
+                            }
+                        }
+                    );
+                });
+                p.channel = channel.port1;
+                return p;
+            } 
+
+            if(this.prev) this.prev = this.prev.then(eventualPromise);
+            else this.prev = eventualPromise();
+            return 
+        }
+
     }
 
-    stop() {
+    stop(gracefully = true) {
         this.channel.port1.unref();
         this.channel.port2.unref();
         if (this.once) {
             this.pool.surrender(this.worker);
         }
         else {
-            this.worker.unref();
+            if(gracefully) this.worker.unref();
+            else this.worker.terminate();
         }
     }
 }
@@ -159,13 +188,13 @@ module.exports = (size = CORES) => {
 
     function stay(routine, context = {}) {
         let wrapped = wrap(routine, context, false);
-        this.stayers.push(wrapped);
+        stayers.push(wrapped);
         return (...params) => wrapped.run(params);
     }
 
-    function shutdown() {
-        default_pool.shutdown();
-        stayers.forEach(r => r.stop());
+    function shutdown(gracefully = true) {
+        default_pool.shutdown(gracefully);
+        stayers.forEach(r => r.stop(gracefully));
     }
 
     return {
