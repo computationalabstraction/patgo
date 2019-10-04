@@ -38,7 +38,11 @@ parentPort.on("message", async packet => {
     }
     catch(err)
     {
-        data = err;
+        data = {
+            name: err.name,
+            message: err.message,
+            error:true
+        };
     }
     parentPort.postMessage(data);
 });
