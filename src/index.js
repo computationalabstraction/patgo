@@ -17,9 +17,7 @@ function send(data) {
 function receive() {
     return new Promise((resolve, reject) => {
         try {
-            this.on('message', data => {
-                resolve(data);
-            });
+            this.once('message', data => resolve(data));
         } catch (error) {
             reject(error);
         }
@@ -29,12 +27,13 @@ function receive() {
 class Pool {
     constructor(capacity) {
         this.nw = capacity;
-        this.nwc = 0;
+        this.aw = 0;
         this.workers = [];
-        this.add(this.nwc);
+        this.add(this.aw);
     }
 
     add(n = 1) {
+        console.log("Adding Worker");
         for (let i = 0; i < n; i++) {
             let thunk =
             {
@@ -43,7 +42,7 @@ class Pool {
             };
             this.workers.push(thunk);
         }
-        this.nwc += n;
+        this.aw += n;
     }
 
     surrender(worker) {
@@ -51,7 +50,7 @@ class Pool {
     }
 
     acquire() {
-        if (this.nwc < this.nw) {
+        if (this.aw < this.nw) {
             this.add();
             let worker = this.workers[this.workers.length - 1];
             worker.line++;
@@ -65,6 +64,7 @@ class Pool {
                 }
             }
             smallest.line++;
+            console.log(smallest.line);
             return smallest;
         }
     }
@@ -74,7 +74,7 @@ class Pool {
         for (let worker of this.workers) {
             console.log("PoolWorker Thread ID");
             console.log(worker.worker.threadId);
-            if(gracefully) worker.worker.unref();
+            if (gracefully) worker.worker.unref();
             else worker.worker.terminate();
         }
     }
@@ -88,88 +88,57 @@ class GoRoutine {
             this.pool = pool;
             this.context = context;
             this.worker = pool.acquire();
-            this.channel = new MessageChannel();
-            this.channel.port1.send = send;
-            this.channel.port1.receive = receive;
         }
         else {
             this.worker = new Worker(worker_code, {
                 workerData: JSON.stringify(context)
             });
-            this.prev = null;
         }
     }
 
     run(params) {
-        if(this.once) 
-        {
-            let packet = {
-                code: code(this.routine, params),
-                channel: this.channel.port2,
-                context: JSON.stringify(this.context)
-            };
-            let p = new Promise((resolve, reject) => {
-                this.worker.worker.postMessage(packet, [this.channel.port2]);
-                this.worker.worker.on('message',
-                    (output) => {
-                        if (typeof(output) == "object" && output.error) {
+        let worker;
+        let channel = new MessageChannel();
+        let packet = {
+            code: code(this.routine, params),
+            channel: channel.port2,
+        };
+        this.once? 
+            (worker = this.worker.worker) || 
+            (packet.context = JSON.stringify(this.context)) : 
+            worker = this.worker;
+        let p = new Promise((resolve, reject) => {
+            worker.postMessage(packet, [channel.port2]);
+            channel.port1.on('message',
+                (output) => {
+                    if (typeof (output) == "object" && output._return) {
+                        if (typeof (output) == "object" && output.value._error) {
                             reject(output);
                         }
-                        else {
-                            resolve(output);
-                        }
-                        this.stop();
+                        else resolve(output.value);
+                        if(this.once) this.stop();
                     }
-                );
-            });
-            p.channel = this.channel.port1;
-            return p;
-        }
-        else 
-        {
-            let channel = new MessageChannel();
-            channel.port1.unref();
-            channel.port2.unref();
-            channel.port1.send = send;
-            channel.port1.receive = receive;
-            let packet = {
-                code: code(this.routine, params),
-                channel: channel.port2,
-            };
-            let eventualPromise = () => {
-                return new Promise((resolve, reject) => {
-                    this.worker.postMessage(packet, [channel.port2]);
-                    this.worker.on('message',
-                        (output) => {
-                            if (typeof(output) == "object" && output.error) {
-                                reject(output);
-                            }
-                            else {
-                                resolve(output);
-                            }
-                        }
-                    );
-                });
-            } 
-            if(this.prev) this.prev = this.prev.then(eventualPromise);
-            else this.prev = eventualPromise();
-            this.prev.channel = channel.port1;
-            return this.prev;
-        }
-
+                }
+            );
+        });
+        channel.port1.send = send;
+        channel.port1.receive = receive;
+        p.channel = channel.port1;
+        return p;
     }
 
     stop(gracefully = true) {
-        console.log("GoRoutine Shutdown");
+        // console.log("GoRoutine Shutdown");
         if (this.once) {
-            this.channel.port1.unref();
-            this.channel.port2.unref();
+            // this.channel.port1.unref();
+            // this.channel.port2.unref();
             this.pool.surrender(this.worker);
         }
         else {
-            console.log("Stay Thread ID");
-            console.log(this.worker.threadId);
-            if(gracefully) this.worker.unref();
+            // console.log("Stay Thread ID");
+            // console.log(this.worker.threadId);
+            // console.log(gracefully);
+            if (gracefully) this.worker.unref();
             else this.worker.terminate();
         }
     }
@@ -181,6 +150,8 @@ function code(func, params) {
 }
 
 module.exports = (size = CORES) => {
+
+    console.log("cores: " + CORES);
 
     const realm = ee();
     const default_pool = new Pool(size);
@@ -200,11 +171,16 @@ module.exports = (size = CORES) => {
         return (...params) => wrapped.run(params);
     }
 
+    function increase_pool_size(n) 
+    {
+        default_pool.add(n);
+    }
+
     function shutdown(gracefully = true) {
-        console.log("Global Shutdown");
+        // console.log("Global Shutdown");
         default_pool.shutdown(gracefully);
-        console.log("Stayers");
-        console.log(stayers);
+        // console.log("Stayers");
+        // console.log(stayers);
         stayers.forEach(r => r.stop(gracefully));
     }
 
@@ -216,6 +192,7 @@ module.exports = (size = CORES) => {
         Pool,
         default_pool,
         shutdown,
-        realm
+        realm,
+        increase_pool_size
     };
 };
