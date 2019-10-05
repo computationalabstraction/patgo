@@ -16,7 +16,7 @@ function receive()
 {
     return new Promise( (resolve,reject) => {
         try {
-            this.on('message', data => resolve(data));
+            this.once('message', data => resolve(data));
         } catch (error) {
             reject(error);
         }
@@ -41,8 +41,12 @@ parentPort.on("message", async packet => {
         data = {
             name: err.name,
             message: err.message,
-            error:true
+            _error:true
         };
     }
-    parentPort.postMessage(data);
+    packet.channel.postMessage({
+        _return: true,
+        value:data
+    });
+    packet.channel.close();
 });
