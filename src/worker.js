@@ -41,11 +41,11 @@ parentPort.on("message", async packet => {
         data = {
             name: err.name,
             message: err.message,
-            _error:true
+            __error__:true
         };
     }
     packet.channel.postMessage({
-        _return: true,
+        __return__: true,
         value:data
     });
     packet.channel.close();
