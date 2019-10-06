@@ -1,12 +1,12 @@
-const { go , stay , shutdown, increase_pool_size } = require("./src")();
+const { go , stay , shutdown, set_pool_size } = require("./src")();
 
 console.log("Before");
 
 let timebefore = new Date();
 (async _ => {
-    // let cAdd = stay();
+    let cAdd = stay()();
 
-    increase_pool_size(20);
+    // set_pool_size(20);
 
     let arr = [];
     for(let i = 0;i < 1000;i++) 
@@ -15,7 +15,9 @@ let timebefore = new Date();
         // cAdd(i,i*2));
     }
 
-    Promise.all(arr).then(v => console.log(v));
+    Promise.all(arr).then(v => console.log(v)).then( _ => {
+        console.log( `${((new Date().getTime()/1000) - (timebefore.getTime()/1000))} seconds`);
+    });
 
     // let r = cAdd(10,20);
     // r.channel.send("first")
@@ -32,9 +34,7 @@ let timebefore = new Date();
     // console.log(v);
     // console.log(await r);
     shutdown();
-})().then( _ => {
-    console.log( `${((new Date().getTime()/1000) - (timebefore.getTime()/1000))} seconds`);
-});
+})();
 
 
 // (async _ => {
