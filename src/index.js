@@ -29,7 +29,7 @@ class Pool {
         this.nw = capacity;
         this.aw = 0;
         this.workers = [];
-        this.add(this.aw);
+        // this.add(this.aw);
     }
 
     add(n = 1) {
@@ -104,16 +104,18 @@ class GoRoutine {
             channel: channel.port2,
         };
         this.once? 
-            (worker = this.worker.worker) || 
+            (worker = this.worker.worker) &&
             (packet.context = JSON.stringify(this.context)) : 
             worker = this.worker;
         let p = new Promise((resolve, reject) => {
             worker.postMessage(packet, [channel.port2]);
             channel.port1.on('message',
                 (output) => {
-                    if (typeof (output) == "object" && output._return) {
-                        if (typeof (output) == "object" && output.value._error) {
-                            reject(output);
+                    if (typeof (output) == "object" && output.__return__) {
+                        if (typeof (output) == "object" && output.value.__error__) {
+                            const err = new Error(output.value.message);
+                            err.name = output.value.name;
+                            reject(err);
                         }
                         else resolve(output.value);
                         if(this.once) this.stop();
@@ -168,12 +170,14 @@ module.exports = (size = CORES) => {
     function stay(routine, context = {}) {
         let wrapped = wrap(routine, context, false);
         stayers.push(wrapped);
-        return (...params) => wrapped.run(params);
+        let call = (...params) => wrapped.run(params);
+        call.shutdown = (gracefully=true) => wrapped.stop(gracefully);
+        return call;
     }
 
-    function increase_pool_size(n) 
+    function set_pool_size(n) 
     {
-        default_pool.add(n);
+        if(n > 0) default_pool.nw = n;
     }
 
     function shutdown(gracefully = true) {
@@ -193,6 +197,6 @@ module.exports = (size = CORES) => {
         default_pool,
         shutdown,
         realm,
-        increase_pool_size
+        set_pool_size
     };
 };
