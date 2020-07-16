@@ -21,6 +21,6 @@
     "jest": "^24.9.0"
   },
   "dependencies": {
-    "conciseee": "^1.0.12"
+    "conciseee": "^1.2.0"
   }
 }
